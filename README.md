@@ -3,7 +3,7 @@
 
 ## Installation
 
-1. From pip (soon)
+1. From pip
 
 ```sh
 pip install livescore-api
