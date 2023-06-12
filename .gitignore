@@ -2,6 +2,7 @@
 *dist
 *build
 *.vscode
+*livescore_api.egg-info
 config_maker.py
 terminal.py
 matches.json
