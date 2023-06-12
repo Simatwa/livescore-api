@@ -124,12 +124,64 @@ class Enter:
             type=int,
             default=4,
         )
-        parser.add_argument("--config", help="Use mapper-keys in path", metavar="PATH")
         parser.add_argument(
-            "--update", help="Update mapper-keys from repo", action="store_true"
+            "--config", help="Use mapper-keys in path - %(default)s", metavar="PATH"
         )
         parser.add_argument(
-            "--raw", help="Return contents with zero manipulation", action="store_true"
+            "--update",
+            help="Update mapper-keys from repo - %(default)s",
+            action="store_true",
+        )
+        parser.add_argument(
+            "--raw",
+            help="Return contents with zero manipulation - %(default)s",
+            action="store_true",
+        )
+        parser.add_argument(
+            "--predict",
+            help="Proceed to make predictions - %(default)s",
+            action="store_true",
+        )
+        parser.add_argument(
+            "-U",
+            "--username",
+            help="Username for the REST api - %(default)s",
+            default="API",
+        )
+        parser.add_argument(
+            "-P",
+            "--password",
+            help="Passkey for the REST api - %(default)s",
+            default="developer",
+        )
+        parser.add_argument(
+            "-S",
+            "--server",
+            help="Url pointing to REST api - %(default)s",
+            default="http://localhost:8000",
+        )
+        parser.add_argument(
+            "-N",
+            "--no-net",
+            help="Make predictions based on data available offline - %(default)s",
+            action="store_false",
+        )
+        parser.add_argument(
+            "-T",
+            "--limit",
+            help="Limit number of matches for prediction - %(default)s",
+            default=1000,
+            type=int,
+        )
+        parser.add_argument(
+            "--REST",
+            help="Specifies to make predictions using REST api - %(default)s",
+            action="store_true",
+        )
+        parser.add_argument(
+            "--include-position",
+            help="Include team-league rank in making predictions - %(default)s",
+            action="store_true",
         )
         return parser.parse_args()
 
@@ -151,6 +203,10 @@ def main():
         "output": args.output,
         "format": args.format,
     }
+
+    initial_format = args.format
+    if args.predict:
+        args.format = "json"
 
     if args.input:
         data = utils.read_json(args.input)
@@ -176,7 +232,33 @@ def main():
     if isinstance(resp, list):
         if len(resp) > args.max:
             resp = resp[:max]
+
+        if args.predict:
+
+            from .predictor import Make
+
+            run = Make(
+                matches=resp,
+                username=args.username,
+                password=args.password,
+                api=args.server,
+                net=args.no_net,
+                include_position=args.include_position,
+                rest=args.REST,
+            )
+            resp = run(limit=args.limit)
+            df_object = utils.DataFrame(resp, initial_format)
+            if initial_format in ("xlsx"):
+                df_object(
+                    args.output
+                    or f"predictions_{args.date}_{args.month}_{args.year}.xlsx"
+                )
+                return
+            resp = df_object()
+
         if args.tabulate:
+            resp = utils.DataFrame(resp, "json")()
+            resp = utils.reformat_json(resp)
             from tabulate import tabulate
 
             resp = tabulate(resp, headers="keys", tablefmt=args.tabulate)

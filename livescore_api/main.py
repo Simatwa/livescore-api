@@ -64,6 +64,22 @@ class utils:
         with open(fnm, "w") as fh:
             json.dump(data, fh, *args, **kwargs)
 
+    @staticmethod
+    def DataFrame(data, format):
+        import pandas
+
+        df = pandas.DataFrame(data)
+        mapper = {
+            "dict": df.to_dict,
+            "csv": df.to_csv,
+            "json": df.to_json,
+            "xlsx": df.to_excel,
+            "html": df.to_html,
+            "xml": df.to_xml,
+            "markdown": df.to_markdown,
+        }
+        return mapper[format]
+
     @classmethod
     def filter(
         cls,
@@ -73,20 +89,19 @@ class utils:
         name: str = None,
         status: str = None,
     ):
-
+        r"""Filter entries
+        :param data: List containing dictionary of matches
+        :param country: Filter matches with country-name
+        :param league : Filter matches with legeau+name
+        :param name: Filter matches with team-name
+        :param status: Filter matches with the status
+        :type data: dict
+        :type others: str
+        :rtype: `pd.DataFrame`
+        """
         import pandas as pd
 
         pd.DataFrame(data).to_sql("Livescore", cls.conn)
-        r"""Filter entries
-		:param data: List containing dictionary of matches
-		:param country: Filter matches with country-name
-		:param league : Filter matches with legeau+name
-		:param name: Filter matches with team-name
-		:param status: Filter matches with the status
-		:type data: dict
-		:type others: str
-		:rtype: `pd.DataFrame`
-		"""
         name_query = (
             f"AND Home LIKE '%{name}%' OR Away LIKE '%{name}%' " if name else ""
         )
@@ -106,7 +121,7 @@ class utils:
 
         r"""Manipulates data to required format
         :param df: `pd.DataFrame` object
-        :type df: object
+        :type df: object `pd.DataFrame`
         :rtype: Instance of `pd.DataFrame`
         """
         if cls.chosen_format == "xlsx":
@@ -119,6 +134,7 @@ class utils:
             "markdown": df.to_markdown,
             "xml": df.to_xml,
             "json": df.to_json,
+            "dict": df.to_dict,
         }
         return mapper[cls.chosen_format]()
 
@@ -145,6 +161,8 @@ class json_formatter:
         :type data: Dict
         :param update: Update data keys from online
         :type update: bool
+        :param config_file: Path to .json file containing mappers
+        :type config_file: str
         :rtype : None
         """
         if not isinstance(data, dict):
@@ -181,6 +199,9 @@ class json_formatter:
             new_config = utils.read_json(config_file)
             self.mappers.update(new_config.get("mappers", self.mappers))
             self.targets.update(new_config.get("targets", self.targets))
+
+    def __call__(self, *args, **kwargs):
+        return self.main(*args, **kwargs)
 
     @utils.error_handler()
     def update_keys(self) -> None:
@@ -270,8 +291,23 @@ class livescore:
         country_code="KE",
         timeout=20,
     ):
+        r"""Livescore instantiator
+        :param date: Date of the matches
+        :param month: Month of the matches
+        :param year: Year of the matches
+        :param country_code: Country code while making Http request
+        :param timeout: Request timeout in seconds
+        :type date: int|str
+        :type month: int|str
+        :type year: int|str
+        :type country_code: str
+        :type timeout: int
+        """
         self.timeout = timeout
         self.url = f"https://prod-public-api.livescore.com/v1/api/app/date/soccer/{year}{str(month).zfill(2)}{str(date).zfill(2)}/3?MD=1&countryCode={country_code}"
+
+    def __str__(self):
+        return self.url
 
     def __call__(self, *args, **kwargs):
         return self.matches(*args, **kwargs)
