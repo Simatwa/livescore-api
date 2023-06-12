@@ -185,6 +185,7 @@ def main():
     if isinstance(resp, dict) and args.raw:
         resp = utils.dump_json(resp, indent=args.indent)
     if args.output:
+        logging.info(f"Saving contents to '{args.output}'")
         with open(args.output, "w") as fh:
             fh.write(resp)
     else:

@@ -254,7 +254,7 @@ class json_formatter:
             if x + 1 == max:
                 break
         if filters or not format == "json":
-            logging.info("Using filters")
+            logging.info(f"Using filters - {filters}")
             utils.chosen_output = output or utils.chosen_output
             utils.chosen_format = format
             return utils.filter(response, **filters)
