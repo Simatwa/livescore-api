@@ -24,8 +24,11 @@ pip install .
 - `$ livescore-api`
 
 <details>
+
 <summary>
-- For more info run `$ livescore-api -h`
+
+For more info run `$ livescore-api -h`
+
 </summary>
 
 ```
