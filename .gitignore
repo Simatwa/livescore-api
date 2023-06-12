@@ -1,0 +1,7 @@
+*__pycache__
+*dist
+*build
+*.vscode
+config_maker.py
+terminal.py
+matches.json

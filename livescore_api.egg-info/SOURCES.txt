@@ -1,0 +1,12 @@
+README.md
+setup.py
+livescore_api/__init__.py
+livescore_api/__main__.py
+livescore_api/console.py
+livescore_api/main.py
+livescore_api.egg-info/PKG-INFO
+livescore_api.egg-info/SOURCES.txt
+livescore_api.egg-info/dependency_links.txt
+livescore_api.egg-info/entry_points.txt
+livescore_api.egg-info/requires.txt
+livescore_api.egg-info/top_level.txt

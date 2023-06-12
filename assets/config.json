@@ -1,0 +1,22 @@
+{
+    "mappers": {
+        "Stages": "Stages",
+        "Events": "Events",
+        "T1": "T1",
+        "T2": "T2"
+    },
+    "targets": {
+        "Serial Id": "Sid",
+        "League": "Snm",
+        "Country": "Cnm",
+        "Match Id": "Eid",
+        "H Scores": "Tr1",
+        "A Scores": "Tr2",
+        "Kickoff": "Esd",
+        "Status": "Eps",
+        "Home": "Nm",
+        "Away": "Nm",
+        "H id": "ID",
+        "A id": "ID"
+    }
+}
