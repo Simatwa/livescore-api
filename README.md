@@ -130,3 +130,13 @@ relation with Livescore.com
 ```
 </details>
 
+## Disclaimer
+
+This script utilizes the Livescore API to provide live scores and other information about sporting events. The Livescore-API is a third-party service and is not affiliated with any specific sporting event or organization. The accuracy of the information provided by the Livescore API is not guaranteed and may vary depending on a number of factors, including the availability of data and the quality of the data. The user of this script assumes all responsibility for any errors, omissions or legal action in the information provided by the Livescore API.
+
+<details>
+<summary>
+- Author
+</summary>
+The author of this script makes no representations or warranties, express or implied, about the accuracy, completeness, or suitability of the information provided by the Livescore API. The author of this script accepts no liability for any errors or omissions in the information provided by the Livescore API.
+</details>
