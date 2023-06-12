@@ -4,6 +4,7 @@ from sys import exit
 import datetime
 import requests
 import warnings
+from . import __repo__
 
 warnings.filterwarnings("ignore",category=UserWarning,module="pandas")
 

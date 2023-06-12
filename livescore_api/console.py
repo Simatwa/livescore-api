@@ -9,7 +9,7 @@ class Enter:
 	
 	output_formats = ["html","csv","xlsx","markdown","xml","json"]
 	filters = ["country","league","name","status"]
-	
+	tables = ["html","pretty","grid","fancy_grid","orgtbl","secure_html"]
 	@classmethod
 	def get_args(cls):
 		parser = argparse.ArgumentParser(description=__info__,epilog="This script has no official relation with Livescore.com",exit_on_error=True,add_help=True)
@@ -26,6 +26,7 @@ class Enter:
 		parser.add_argument("-o","--output",help="Path to save the content - %(default)s",metavar="PATH")
 		parser.add_argument("-f","--format",help="Contents output format - %(default)s",choices=cls.output_formats,metavar="|".join(cls.output_formats),default="json")
 		parser.add_argument("-i","--input",help="Use .json formatted file in path - %(default)s",metavar="PATH")
+		parser.add_argument("-t","--tabulate",help="Tabulate the contents using style specified",choices=cls.tables,metavar="|".join(cls.tables))
 		parser.add_argument("--code",help="Country code for making http request - %(default)s",default="KE")
 		parser.add_argument("--timeout",help="Http request timeout - %(default)ss",default=20,type=int)
 		parser.add_argument("--indent",help="Indentation level for formatting .json output - %(default)s",type=int,default=4)
@@ -54,8 +55,12 @@ def main():
 		resp = run.matches(**main_filter)
 		
 	if isinstance(resp,list):
-		resp = {"matches":resp}
-		resp = utils.dump_json(resp,indent=args.indent)
+		if args.tabulate:
+			from tabulate import tabulate
+			resp = tabulate(resp,headers="keys",tablefmt=args.tabulate)
+		else:
+			resp = {"matches":resp}
+			resp = utils.dump_json(resp,indent=args.indent)
 	if args.output:
 		with open(args.output,"w") as fh:
 			fh.write(resp)

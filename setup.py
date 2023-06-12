@@ -16,6 +16,7 @@ setup(
         "requests>=2.28.2",
         "argparse",
         "pandas",#==2.0.2",
+        "tabulate",
     ],
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
