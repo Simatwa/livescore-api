@@ -38,7 +38,8 @@ class utils:
 				except Exception as e:
 					#print(e)
 					if log:
-						logging.error(f"Function ({func.__name__}) : {get_excep(e)}")
+						logging.debug(f"Function ({func.__name__}) : {get_excep(e)}")
+						logging.error(get_excep(e))
 					if exit_on_error:
 						exit(1)
 						
@@ -248,7 +249,7 @@ class livescore:
 		return self.matches(*args,**kwargs)
 	
 	@utils.error_handler({})
-	def matches(self,max:int=1000,filters:dict={},output:str=None,format:str="json",headers:dict=headers):
+	def matches(self,max:int=1000,filters:dict={},output:str=None,format:str="json",raw:bool=False,headers:dict=headers):
 		r"""Fetches data from Livescore and formats the
 		:param max: Total number of matches to be returned
 		:type max: int
@@ -258,6 +259,8 @@ class livescore:
 		:type filter: dict
 		:param output: Path to save contents in case of `xlsx`
 		:type output: str
+		:param raw: Return unmanipulated content
+		:type raw: dict
 		:param format: Output format `["html","csv","xlsx","markdown","xml"]`
 		:type format: str
 		:rtype: list of dict
@@ -265,7 +268,10 @@ class livescore:
 		logging.info(f"Fetching matches from livescore with url - {self.url}")
 		reqs = requests.get(self.url,timeout=self.timeout,headers=headers)
 		if reqs.ok and reqs.headers.get("Content-Type") == "application/json":
-				return json_formatter(data=reqs.json()).main(max,filters,output,format)
+				raw_content = reqs.json()
+				if raw:
+					return raw_content
+				return json_formatter(data=raw_content).main(max,filters,output,format)
 		else:
 				logging.debug(f"Content-Type : {reqs.headers.get('content-type')} Content : {reqs.text}") 
 				raise Exception(f"Failed to fetch required contents  : URL - {self.url}, STATUS_CODE - {reqs.status_code} , REASON - {reqs.reason}")

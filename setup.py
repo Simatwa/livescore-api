@@ -40,4 +40,5 @@ setup(
             ("livescore-api = livescore_api.console:main"),
         ]
     },
+    keywords = ["livescore","football","livescore-api","api"],
 )

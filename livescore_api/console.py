@@ -30,8 +30,9 @@ class Enter:
 		parser.add_argument("--code",help="Country code for making http request - %(default)s",default="KE")
 		parser.add_argument("--timeout",help="Http request timeout - %(default)ss",default=20,type=int)
 		parser.add_argument("--indent",help="Indentation level for formatting .json output - %(default)s",type=int,default=4)
-		parser.add_argument("--update",help="Update mapper-keys from repo",action="store_true")
 		parser.add_argument("--config",help="Use mapper-keys in path",metavar="PATH")
+		parser.add_argument("--update",help="Update mapper-keys from repo",action="store_true")
+		parser.add_argument("--raw",help="Return contents with zero manipulation",action="store_true")
 		return parser.parse_args()
 	
 @utils.error_handler()
@@ -52,6 +53,7 @@ def main():
 		
 		if args.headers:
 			main_filter["headers"] = utils.read_json(args.headers)
+		main_filter["raw"] = args.raw
 		resp = run.matches(**main_filter)
 		
 	if isinstance(resp,list):
@@ -61,6 +63,9 @@ def main():
 		else:
 			resp = {"matches":resp}
 			resp = utils.dump_json(resp,indent=args.indent)
+	
+	if isinstance(resp,dict) and args.raw:
+		resp = utils.dump_json(resp,indent=args.indent)
 	if args.output:
 		with open(args.output,"w") as fh:
 			fh.write(resp)
