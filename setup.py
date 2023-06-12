@@ -15,7 +15,7 @@ setup(
     install_requires=[
         "requests>=2.28.2",
         "argparse",
-        "pandas",#==2.0.2",
+        "pandas",  # ==2.0.2",
         "tabulate",
     ],
     long_description=open("README.md").read(),
@@ -40,5 +40,5 @@ setup(
             ("livescore-api = livescore_api.console:main"),
         ]
     },
-    keywords = ["livescore","football","livescore-api","api"],
+    keywords=["livescore", "football", "livescore-api", "api"],
 )
