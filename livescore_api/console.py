@@ -174,6 +174,8 @@ def main():
         resp = run.matches(**main_filter)
 
     if isinstance(resp, list):
+        if len(resp) > args.max:
+            resp = resp[:max]
         if args.tabulate:
             from tabulate import tabulate
 
