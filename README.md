@@ -206,7 +206,7 @@ This script utilizes the Livescore API to provide live scores and other informat
 
 <summary>
 
-- Author
+Author
 
 </summary>
 
