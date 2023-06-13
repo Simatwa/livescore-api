@@ -14,7 +14,7 @@ setup(
     project_urls={"Bug Report": f"{__repo__}/issues/new"},
     install_requires=[
     "argparse>=1.1",
-    "requests>=2.0.2<=2.31.0",
+    "requests>=2.0.2",
     "pandas>=1.3.3",
     "tabulate==0.9.0",
     "smartbetsAPI==1.1.3",
