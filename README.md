@@ -29,6 +29,8 @@ pip install .
 
 ## Usage
 
+- `$ livescore-api`
+
 <details>
 <summary>
 
@@ -113,8 +115,6 @@ Output
 </details>
 
 </summary>
-
-- `$ livescore-api`
 
 <details>
 
