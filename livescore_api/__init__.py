@@ -5,5 +5,6 @@ __info__ = "Access and manipulate matches from Livescore.com"
 __author__ = "Smartwa"
 
 from .main import json_formatter, livescore, utils
+from .predictor import Make
 
 __all__ = ["json_formatter", "livescore", "utils"]

@@ -21,6 +21,91 @@ pip install .
 
 ## Usage
 
+<details>
+<summary>
+
+### Developer docs
+
+</summary>
+
+1. Retrieving data offline
+
+```py
+from livescore_api import json_formatter
+raw_matches = open("matches.json").read()
+sorted_matches = json_formatter(raw_matches)
+print(sorted_matches(max=1))
+
+"""
+Output
+[
+{
+    "Serial Id": "12413",
+    "League": "Primera Division",
+    "Country": "Argentina",
+    "Match Id": "866073",
+    "H Scores": "1",
+    "A Scores": "4",
+    "Kickoff": 20230613011500,
+    "Status": "FT",
+    "Home": "Banfield",
+    "H id": "5252",
+    "Away": "River Plate",
+    "A id": "4802"
+}
+]
+"""
+```
+
+2. Retrieving data online
+
+```py
+from livescore_api import livescore
+
+matches = livescore()
+print(matches(max=1))
+
+"""
+Output
+
+[
+{
+    "Serial Id": "12413",
+    "League": "Primera Division",
+    "Country": "Argentina",
+    "Match Id": "866073",
+    "H Scores": "1",
+    "A Scores": "4",
+    "Kickoff": 20230613011500,
+    "Status": "FT",
+    "Home": "Banfield",
+    "H id": "5252",
+    "Away": "River Plate",
+    "A id": "4802"
+}
+]
+"""
+```
+
+3. Making predictions
+
+```py
+from livescore_api import Make
+matches = [{"Home":"Arsenal", "Away":"Liverpool"}]
+bet = Make(matches)
+print(bet())
+
+"""
+Output
+
+[{'Home': 'Arsenal', 'Away': 'Liverpool', 'g': 10.0, 'gg': 55.0, 'ov15': 60.0, 'ov25': 45.0, 'ov35': 25.0, 'choice': 62.5, 'result': '2', 'pick': '2'}]
+"""
+
+```
+</details>
+
+</summary>
+
 - `$ livescore-api`
 
 <details>
@@ -32,75 +117,76 @@ For more info run `$ livescore-api -h`
 </summary>
 
 ```
-usage: livescore-api [-h] [-v] [-m MONTH] [-y YEAR]
-                     [-c COUNTRY] [-l LEAGUE]
-                     [-n NAME] [-s STATUS] [-M MAX]
+usage: livescore-api [-h] [-v] [-m MONTH] [-y YEAR] [-c COUNTRY]
+                     [-l LEAGUE] [-n NAME] [-s STATUS] [-M MAX]
                      [-H HEADERS] [-o PATH]
-                     [-f html|csv|xlsx|markdown|xml|json]
-                     [-i PATH]
+                     [-f html|csv|xlsx|markdown|xml|json] [-i PATH]
                      [-t html|pretty|grid|fancy_grid|orgtbl|secure_html]
-                     [--code CODE]
-                     [--timeout TIMEOUT]
-                     [--indent INDENT]
-                     [--config PATH] [--update]
-                     [--raw]
+                     [-D CODE] [-E TIMEOUT] [-I INDENT] [-C PATH]
+                     [--update] [--raw] [--predict] [-U USERNAME]
+                     [-P PASSWORD] [-S SERVER] [-T LIMIT] [--offline]
+                     [--REST] [--include-position]
                      [date]
 
 Access and manipulate matches from Livescore.com
 
 positional arguments:
-  date                  Date of the matches - 12
+  date                  Date of the matches - 13
 
 options:
-  -h, --help            show this help message and
-                        exit
-  -v, --version         show program's version number
-                        and exit
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
   -m MONTH, --month MONTH
                         Month of the matches - 6
   -y YEAR, --year YEAR  Year of the matches - 2023
   -c COUNTRY, --country COUNTRY
-                        Return matches from the
-                        specified countries only -
-                        None
+                        Return matches from the specified countries only
+                        - None
   -l LEAGUE, --league LEAGUE
-                        Return matches of the
-                        specified league(s) only -
+                        Return matches of the specified league(s) only -
                         None
-  -n NAME, --name NAME  Return matches with the
-                        specified team-name only -
-                        None
+  -n NAME, --name NAME  Return matches with the specified team-name only
+                        - None
   -s STATUS, --status STATUS
-                        Return matches of the
-                        specified status - None
-  -M MAX, --max MAX     Maximum matches to be
-                        returned - 1000
+                        Return matches of the specified status - None
+  -M MAX, --max MAX     Maximum matches to be returned - 1000
   -H HEADERS, --headers HEADERS
-                        Path to .json file containing
-                        http headers - None
+                        Path to .json file containing http headers - None
   -o PATH, --output PATH
-                        Path to save the content -
-                        None
+                        Path to save the content - None
   -f html|csv|xlsx|markdown|xml|json, --format html|csv|xlsx|markdown|xml|json
                         Contents output format - json
   -i PATH, --input PATH
-                        Use .json formatted file in
-                        path - None
+                        Use .json formatted file in path - None
   -t html|pretty|grid|fancy_grid|orgtbl|secure_html, --tabulate html|pretty|grid|fancy_grid|orgtbl|secure_html
-                        Tabulate the contents using
-                        style specified
-  --code CODE           Country code for making http
-                        request - KE
-  --timeout TIMEOUT     Http request timeout - 20s
-  --indent INDENT       Indentation level for
-                        formatting .json output - 4
-  --config PATH         Use mapper-keys in path
-  --update              Update mapper-keys from repo
-  --raw                 Return contents with zero
-                        manipulation
+                        Tabulate the contents using style specified -
+                        None
+  -D CODE, --code CODE  Country code for making http request - KE
+  -E TIMEOUT, --timeout TIMEOUT
+                        Http request timeout - 20s
+  -I INDENT, --indent INDENT
+                        Indentation level for formatting .json output - 4
+  -C PATH, --config PATH
+                        Use mapper-keys in path - None
+  --update              Update mapper-keys from repo - False
+  --raw                 Return contents with zero manipulation - False
+  --predict             Proceed to make predictions - False
+  -U USERNAME, --username USERNAME
+                        Username for the REST api - API
+  -P PASSWORD, --password PASSWORD
+                        Passkey for the REST api - developer
+  -S SERVER, --server SERVER
+                        Url pointing to REST api - http://localhost:8000
+  -T LIMIT, --limit LIMIT
+                        Limit number of matches for prediction - 1000
+  --offline             Make predictions based on data available offline
+                        - False
+  --REST                Specifies to make predictions using REST api -
+                        False
+  --include-position    Include team-league rank in making predictions -
+                        False
 
-This script has no official relation with 
-Livescore.com
+This script has no official relation with Livescore.com
 ```
 </details>
 

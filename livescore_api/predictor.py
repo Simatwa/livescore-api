@@ -5,7 +5,7 @@ import logging
 class Make:
     def __init__(
         self,
-        matches: list = None,
+        matches:list,
         api: str = None,
         username: str = None,
         password: str = None,
@@ -23,8 +23,6 @@ class Make:
         :type include_position:bool
         :type rest: bool
         """
-        if not matches:
-            raise Exception("Argument 'matches' is required")
         if isinstance(matches, str):
             from .main import utils
 
