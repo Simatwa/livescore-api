@@ -36,9 +36,9 @@ class utils:
                 try:
                     return func(*args, **kwargs)
                 except Exception as e:
-                    import traceback as tb
+                    #import traceback as tb
 
-                    tb.print_exc()
+                    #tb.print_exc()
                     if log:
                         logging.debug(f"Function ({func.__name__}) : {get_excep(e)}")
                         logging.error(get_excep(e))
