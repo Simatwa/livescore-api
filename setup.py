@@ -18,6 +18,8 @@ setup(
     "pandas>=1.3.3",
     "tabulate==0.9.0",
     "smartbetsAPI==1.1.3",
+    "tqdm==4.65.0",
+    "colorama==0.4.6",
     ],
     python_requires=">=3.8",
     long_description=open("README.md").read(),
