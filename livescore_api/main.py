@@ -284,7 +284,7 @@ class json_formatter:
             )  ## handle events
             resp.update(self.__get_team_info(Entry.get(self.mappers["Events"])[0]))
             response.append(resp)
-            if x + 1 == max:
+            if x == max:
                 break
         if filters or not format == "json":
             logging.info(f"Using filters - {filters}")

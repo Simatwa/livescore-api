@@ -108,24 +108,30 @@ class Enter:
             metavar="|".join(cls.tables),
         )
         parser.add_argument(
+            "-D",
             "--code",
             help="Country code for making http request - %(default)s",
             default="KE",
         )
         parser.add_argument(
+            "-E",
             "--timeout",
             help="Http request timeout - %(default)ss",
             default=20,
             type=int,
         )
         parser.add_argument(
+            "-I",
             "--indent",
             help="Indentation level for formatting .json output - %(default)s",
             type=int,
             default=4,
         )
         parser.add_argument(
-            "--config", help="Use mapper-keys in path - %(default)s", metavar="PATH"
+            "-C",
+            "--config",
+            help="Use mapper-keys in path - %(default)s",
+            metavar="PATH",
         )
         parser.add_argument(
             "--update",
@@ -161,17 +167,16 @@ class Enter:
             default="http://localhost:8000",
         )
         parser.add_argument(
-            "-N",
-            "--no-net",
-            help="Make predictions based on data available offline - %(default)s",
-            action="store_false",
-        )
-        parser.add_argument(
             "-T",
             "--limit",
             help="Limit number of matches for prediction - %(default)s",
             default=1000,
             type=int,
+        )
+        parser.add_argument(
+            "--offline",
+            help="Make predictions based on data available offline - %(default)s",
+            action="store_true",
         )
         parser.add_argument(
             "--REST",
@@ -201,12 +206,8 @@ def main():
         "max": args.max,
         "filters": filters,
         "output": args.output,
-        "format": args.format,
+        "format": "json" if any([args.predict, args.REST]) else args.format,
     }
-
-    initial_format = args.format
-    if args.predict:
-        args.format = "json"
 
     if args.input:
         data = utils.read_json(args.input)
@@ -233,7 +234,7 @@ def main():
         if len(resp) > args.max:
             resp = resp[:max]
 
-        if args.predict:
+        if any([args.predict, args.REST]):
 
             from .predictor import Make
 
@@ -242,32 +243,28 @@ def main():
                 username=args.username,
                 password=args.password,
                 api=args.server,
-                net=args.no_net,
+                net=args.offline == False,
                 include_position=args.include_position,
                 rest=args.REST,
             )
             resp = run(limit=args.limit)
-            df_object = utils.DataFrame(resp, initial_format)
-            if initial_format in ("xlsx"):
+            df_object = utils.DataFrame(resp, args.format)
+            if args.format in ("xlsx"):
                 df_object(
                     args.output
                     or f"predictions_{args.date}_{args.month}_{args.year}.xlsx"
                 )
                 return
             resp = df_object()
+            if args.format in ("json"):
+                resp = utils.reformat_json(resp)
 
-        if not isinstance(resp, dict):
-            resp = utils.DataFrame(resp, "dict")()
-            resp = utils.reformat_json(resp)
+    if args.tabulate and isinstance(resp, (dict, list)):
+        from tabulate import tabulate
 
-        if args.tabulate:
-            from tabulate import tabulate
+        resp = tabulate(resp, headers="keys", tablefmt=args.tabulate)
 
-            resp = tabulate(resp, headers="keys", tablefmt=args.tabulate)
-        else:
-            resp = utils.dump_json({"matches": resp}, indent=args.indent)
-
-    if isinstance(resp, dict):
+    elif isinstance(resp, (dict, list)):
         resp = utils.dump_json(
             resp if args.raw else {"matches": resp}, indent=args.indent
         )

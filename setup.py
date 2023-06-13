@@ -13,11 +13,13 @@ setup(
     url=__repo__,
     project_urls={"Bug Report": f"{__repo__}/issues/new"},
     install_requires=[
-        "requests>=2.28.2",
-        "argparse",
-        "pandas",  # ==2.0.2",
-        "tabulate",
+    "argparse>=1.1",
+    "requests>=2.0.2<=2.31.0",
+    "pandas>=1.3.3",
+    "tabulate==0.9.0",
+    "smartbetsAPI==1.1.3",
     ],
+    python_requires=">=3.8",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     classifiers=[
