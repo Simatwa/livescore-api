@@ -36,7 +36,9 @@ class utils:
                 try:
                     return func(*args, **kwargs)
                 except Exception as e:
-                    # print(e)
+                    import traceback as tb
+
+                    tb.print_exc()
                     if log:
                         logging.debug(f"Function ({func.__name__}) : {get_excep(e)}")
                         logging.error(get_excep(e))
@@ -146,6 +148,16 @@ class utils:
         :rtype: dict
         """
         resp = []
+        if not isinstance(reformatted, dict):
+            reformatted = json.loads(reformatted)
+        if not "index" in reformatted.keys():
+            for x in reformatted["Serial Id"].keys():
+                hunted = {}
+                for key in reformatted.keys():
+                    hunted.update({key: reformatted[key].get(x)})
+                resp.append(hunted)
+            return resp
+
         for x in list(reformatted["index"].keys())[1:]:
             hunted = {}
             for val in list(reformatted.keys())[1:]:

@@ -103,7 +103,7 @@ class Enter:
         parser.add_argument(
             "-t",
             "--tabulate",
-            help="Tabulate the contents using style specified",
+            help="Tabulate the contents using style specified - %(default)s",
             choices=cls.tables,
             metavar="|".join(cls.tables),
         )
@@ -186,7 +186,7 @@ class Enter:
         return parser.parse_args()
 
 
-@utils.error_handler()
+@utils.error_handler(exit_on_error=True)
 def main():
     args = Enter.get_args()
 
@@ -256,19 +256,24 @@ def main():
                 return
             resp = df_object()
 
-        if args.tabulate:
-            resp = utils.DataFrame(resp, "json")()
+        if not isinstance(resp, dict):
+            resp = utils.DataFrame(resp, "dict")()
             resp = utils.reformat_json(resp)
+
+        if args.tabulate:
             from tabulate import tabulate
 
             resp = tabulate(resp, headers="keys", tablefmt=args.tabulate)
         else:
-            resp = {"matches": resp}
-            resp = utils.dump_json(resp, indent=args.indent)
+            resp = utils.dump_json({"matches": resp}, indent=args.indent)
 
-    if isinstance(resp, dict) and args.raw:
-        resp = utils.dump_json(resp, indent=args.indent)
+    if isinstance(resp, dict):
+        resp = utils.dump_json(
+            resp if args.raw else {"matches": resp}, indent=args.indent
+        )
+
     if args.output:
+
         logging.info(f"Saving contents to '{args.output}'")
         with open(args.output, "w") as fh:
             fh.write(resp)
