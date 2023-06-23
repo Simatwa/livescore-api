@@ -1,25 +1,29 @@
 from setuptools import setup
-from livescore_api import __version__, __author__, __repo__, __info__
+
+version = "0.0.4"
+repo = "https://github.com/Simatwa/livescore-api"
+info = "Access and manipulate matches from Livescore.com"
+author = "Smartwa"
 
 setup(
     name="livescore-api",
     packages=["livescore_api"],
-    version=__version__,
+    version=version,
     license="MIT",
-    author=__author__,
-    maintainer=__author__,
+    author=author,
+    maintainer=author,
     author_email="smartwacaleb@gmail.com",
-    description=__info__,
-    url=__repo__,
-    project_urls={"Bug Report": f"{__repo__}/issues/new"},
+    description=info,
+    url=repo,
+    project_urls={"Bug Report": f"{repo}/issues/new"},
     install_requires=[
-    "argparse>=1.1",
-    "requests>=2.0.2",
-    "pandas>=1.3.3",
-    "tabulate==0.9.0",
-    "smartbetsAPI==1.1.4",
-    "tqdm==4.65.0",
-    "colorama==0.4.6",
+        "argparse>=1.1",
+        "requests>=2.0.2",
+        "pandas>=1.3.3",
+        "tabulate==0.9.0",
+        "smartbetsAPI==1.1.4",
+        "tqdm==4.65.0",
+        "colorama==0.4.6",
     ],
     python_requires=">=3.8",
     long_description=open("README.md").read(),
