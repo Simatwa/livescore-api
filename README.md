@@ -1,6 +1,6 @@
 # Livescore-api
 <p align="center">
-<a href="https://github.com/Simatwa/livescore-api"><img alt="Github" src="https://img.shields.io/static/v1?logo=github&color=blueviolet&label=Test&message=Passing"/></a>
+<a href="https://github.com/Simatwa/livescore-api/actions/workflows/python-test.yml"><img src="https://github.com/Simatwa/livescore-api/actions/workflows/python-test.yml/badge.svg" alt="Python Test"/></a>
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/static/v1?logo=GPL&color=Blue&message=MIT&label=License"/></a>
 <a href="https://pypi.org/project/livescore-api"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.0.4&color=green"/></a>
 <a href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/static/v1?logo=Black&label=Code-style&message=Black"/></a>
