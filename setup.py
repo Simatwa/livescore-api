@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = "0.0.4"
+version = "0.0.5"
 repo = "https://github.com/Simatwa/livescore-api"
 info = "Access and manipulate matches from Livescore.com"
 author = "Smartwa"
@@ -21,7 +21,7 @@ setup(
         "requests>=2.0.2",
         "pandas>=1.3.3",
         "tabulate==0.9.0",
-        "smartbetsAPI==1.1.4",
+        "smartbetsAPI==1.3.1",
         "tqdm==4.65.0",
         "colorama==0.4.6",
     ],

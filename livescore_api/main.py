@@ -120,7 +120,6 @@ class utils:
 
     @classmethod
     def format(cls, df):
-
         r"""Manipulates data to required format
         :param df: `pd.DataFrame` object
         :type df: object `pd.DataFrame`

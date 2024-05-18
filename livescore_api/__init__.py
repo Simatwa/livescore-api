@@ -1,4 +1,4 @@
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 __program__ = "livescore-api"
 __repo__ = "https://github.com/Simatwa/livescore-api"
 __info__ = "Access and manipulate matches from Livescore.com"
