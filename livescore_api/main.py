@@ -275,7 +275,7 @@ class json_formatter:
         :rtype: list of dict or `pd.DataFrame` if filters
         """
         response = []
-        for x, entry in enumerate(self.data.get(self.mappers["Stages"])):
+        for x, entry in enumerate(self.data.get(self.mappers["Stages"]), start=1):
             Entry, resp = entry, {}
             resp.update(self.__get_intro(Entry))  # First 3 values of self.targets
             resp.update(
