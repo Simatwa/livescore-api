@@ -169,7 +169,7 @@ class Utils:
 
 class JsonFormatter:
     def __init__(self, data: dict | str, update: bool = False, config_file: str = None):
-        r"""Intantiator
+        r"""Constructor for `JsonFormatter`
         :param data: Dict or Json response from Livescore-API
         :type data: Dict
         :param update: Update data keys from online
