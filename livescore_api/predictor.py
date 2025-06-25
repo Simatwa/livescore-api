@@ -5,7 +5,7 @@ import logging
 class Make:
     def __init__(
         self,
-        matches: list,
+        matches: list | str,
         api: str = None,
         username: str = None,
         password: str = None,
@@ -24,9 +24,9 @@ class Make:
         :type rest: bool
         """
         if isinstance(matches, str):
-            from .main import utils
+            from .main import Utils
 
-            matches = utils.read_json(matches)
+            matches = Utils.read_json(matches)
         self.matches = matches
         self.api = api
         self.username = username
@@ -44,13 +44,13 @@ class Make:
         return self.main(*args, **kwargs)
 
     def __get_matches(self, match_info: dict):
-        return dict(home=match_info["Home"], away=match_info["Away"], net=self.net)
+        return dict(home=match_info["home"], away=match_info["away"], net=self.net)
 
     def main(self, limit: int = 1000, *args, **kwargs):
-        r"""Predict maker
+        r"""Make predictions without showing progressbar.
         :param limit: Maximum number of predictions to be made
         :param args: Positional arguments to be parsed to `predict` class
-        :param kwargs: Keyworded arguments ti be parsed to `predict` class
+        :param kwargs: Keyworded arguments to be parsed to `predict` class
         :type limit: int
         :type args: list|tuple
         :type kwargs: dict
@@ -69,7 +69,7 @@ class Make:
                     resp.append(match)
                 else:
                     logging.error(
-                        f"Failed to place predictions on - [{match['Home']} : {match['Away']}]"
+                        f"Failed to place predictions on - [{match['home']} : {match['away']}]"
                     )
                 if x + 1 >= limit:
                     break
@@ -80,7 +80,7 @@ class Make:
             engine = predictor(*args, **kwargs)
             for x, match in enumerate(self.matches):
                 predictions = engine.predictorL(
-                    **dict(teams=[match["Home"], match["Away"]], net=self.net)
+                    **dict(teams=[match["home"], match["away"]], net=self.net)
                 )
                 match.update(predictions)
                 resp.append(match)
@@ -91,10 +91,10 @@ class Make:
         return resp
 
     def main_(self, limit: int = 1000, *args, **kwargs):
-        r"""Predict maker
+        r"""Make predictions while showing progress.
         :param limit: Maximum number of predictions to be made
-        :param args: Positional arguments to be parsed to `predict` class
-        :param kwargs: Keyworded arguments ti be parsed to `predict` class
+        :param args: Positional arguments to be passed to `predict` class
+        :param kwargs: Keyworded arguments to be passed to `predict` class
         :type limit: int
         :type args: list|tuple
         :type kwargs: dict
@@ -122,7 +122,7 @@ class Make:
                         resp.append(match)
                     else:
                         logging.error(
-                            f"Failed to place predictions on - [{match['Home']} : {match['Away']}]"
+                            f"Failed to place predictions on - [{match['home']} : {match['away']}]"
                         )
                     progress_bar.update(1)
                     if x + 1 >= limit:
@@ -135,7 +135,7 @@ class Make:
             with tqdm(**tqdm_kwargs) as progress_bar:
                 for x, match in enumerate(self.matches):
                     predictions = engine.predictorL(
-                        **dict(teams=[match["Home"], match["Away"]], net=self.net)
+                        **dict(teams=[match["home"], match["away"]], net=self.net)
                     )
                     match.update(predictions)
                     resp.append(match)

@@ -6,17 +6,17 @@
         "T2": "T2"
     },
     "targets": {
-        "Serial Id": "Sid",
-        "League": "Snm",
-        "Country": "Cnm",
-        "Match Id": "Eid",
-        "H Scores": "Tr1",
-        "A Scores": "Tr2",
-        "Kickoff": "Esd",
-        "Status": "Eps",
-        "Home": "Nm",
-        "Away": "Nm",
-        "H id": "ID",
-        "A id": "ID"
+        "serial_id": "Sid",
+        "league": "Snm",
+        "country": "Cnm",
+        "match_id": "Eid",
+        "home_scores": "Tr1",
+        "away_scores": "Tr2",
+        "kickoff": "Esd",
+        "status": "Eps",
+        "home": "Nm",
+        "away": "Nm",
+        "home_id": "ID",
+        "away_id": "ID"
     }
 }

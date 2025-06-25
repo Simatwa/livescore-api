@@ -44,28 +44,28 @@ pip install .
 1. Retrieving data offline
 
 ```py
-from livescore_api import json_formatter
+from livescore_api import JsonFormatter
 raw_matches = open("matches.json").read()
-sorted_matches = json_formatter(raw_matches)
+sorted_matches = JsonFormatter(raw_matches)
 print(sorted_matches(max=1))
 
 """
 Output
 [
-{
-    "Serial Id": "12413",
-    "League": "Primera Division",
-    "Country": "Argentina",
-    "Match Id": "866073",
-    "H Scores": "1",
-    "A Scores": "4",
-    "Kickoff": 20230613011500,
-    "Status": "FT",
-    "Home": "Banfield",
-    "H id": "5252",
-    "Away": "River Plate",
-    "A id": "4802"
-}
+    {
+        "serial_id": "20025",
+        "league": "FIFA Club World Cup: Group D",
+        "country": "International",
+        "match_id": "1418919",
+        "home_scores": "0",
+        "away_scores": "3",
+        "kickoff": 20250625040000,
+        "status": "FT",
+        "home": "Esperance",
+        "home_id": "3285",
+        "away": "Chelsea",
+        "away_id": "2881",
+    }
 ]
 """
 ```
@@ -73,29 +73,29 @@ Output
 2. Retrieving data online
 
 ```py
-from livescore_api import livescore
+from livescore_api import Livescore
 
-matches = livescore()
+matches = Livescore()
 print(matches(max=1))
 
 """
 Output
 
 [
-{
-    "Serial Id": "12413",
-    "League": "Primera Division",
-    "Country": "Argentina",
-    "Match Id": "866073",
-    "H Scores": "1",
-    "A Scores": "4",
-    "Kickoff": 20230613011500,
-    "Status": "FT",
-    "Home": "Banfield",
-    "H id": "5252",
-    "Away": "River Plate",
-    "A id": "4802"
-}
+    {
+        "serial_id": "20025",
+        "league": "FIFA Club World Cup: Group D",
+        "country": "International",
+        "match_id": "1418919",
+        "home_scores": "0",
+        "away_scores": "3",
+        "kickoff": 20250625040000,
+        "status": "FT",
+        "home": "Esperance",
+        "home_id": "3285",
+        "away": "Chelsea",
+        "away_id": "2881",
+    }
 ]
 """
 ```

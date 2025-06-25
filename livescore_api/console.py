@@ -1,5 +1,5 @@
 from . import __version__, __repo__, __info__, __program__
-from .main import livescore, now, json_formatter, utils
+from .main import Livescore, now, JsonFormatter, Utils
 import logging
 import argparse
 
@@ -191,7 +191,7 @@ class Enter:
         return parser.parse_args()
 
 
-@utils.error_handler(exit_on_error=True)
+@Utils.error_handler(exit_on_error=True)
 def main():
     args = Enter.get_args()
 
@@ -210,12 +210,12 @@ def main():
     }
 
     if args.input:
-        data = utils.read_json(args.input)
-        run = json_formatter(data, args.update, args.config)
+        data = Utils.read_json(args.input)
+        run = JsonFormatter(data, args.update, args.config)
         resp = run.main(**main_filter)
 
     else:
-        run = livescore(
+        run = Livescore(
             **dict(
                 date=args.date,
                 month=args.month,
@@ -226,7 +226,7 @@ def main():
         )
 
         if args.headers:
-            main_filter["headers"] = utils.read_json(args.headers)
+            main_filter["headers"] = Utils.read_json(args.headers)
         main_filter["raw"] = args.raw
         resp = run.matches(**main_filter)
 
@@ -248,7 +248,7 @@ def main():
                 rest=args.REST,
             )
             resp = run(limit=args.limit)
-            df_object = utils.DataFrame(resp, args.format)
+            df_object = Utils.DataFrame(resp, args.format)
             if args.format in ("xlsx"):
                 df_object(
                     args.output
@@ -257,7 +257,7 @@ def main():
                 return
             resp = df_object()
             if args.format in ("json"):
-                resp = utils.reformat_json(resp)
+                resp = Utils.reformat_json(resp)
 
     if args.tabulate and isinstance(resp, (dict, list)):
         from tabulate import tabulate
@@ -265,7 +265,7 @@ def main():
         resp = tabulate(resp, headers="keys", tablefmt=args.tabulate)
 
     elif isinstance(resp, (dict, list)):
-        resp = utils.dump_json(
+        resp = Utils.dump_json(
             resp if args.raw else {"matches": resp}, indent=args.indent
         )
 

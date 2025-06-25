@@ -21,7 +21,9 @@ headers = {
 }
 
 
-class utils:
+class Utils:
+    """Common functions and variables"""
+
     import sqlite3
 
     conn = sqlite3.connect(":memory:")
@@ -51,7 +53,7 @@ class utils:
 
         return decorator
 
-    # @utils.error_handler(exit_on_error=True)
+    # @Utils.error_handler(exit_on_error=True)
     @staticmethod
     def read_json(fnm):
         with open(fnm) as fh:
@@ -150,7 +152,7 @@ class utils:
         if not isinstance(reformatted, dict):
             reformatted = json.loads(reformatted)
         if not "index" in reformatted.keys():
-            for x in reformatted["Serial Id"].keys():
+            for x in reformatted["serial_id"].keys():
                 hunted = {}
                 for key in reformatted.keys():
                     hunted.update({key: reformatted[key].get(x)})
@@ -165,10 +167,10 @@ class utils:
         return resp
 
 
-class json_formatter:
-    def __init__(self, data: dict, update: bool = False, config_file: str = None):
+class JsonFormatter:
+    def __init__(self, data: dict | str, update: bool = False, config_file: str = None):
         r"""Intantiator
-        :param data: Dict or Json response from Livescorem-API
+        :param data: Dict or Json response from Livescore-API
         :type data: Dict
         :param update: Update data keys from online
         :type update: bool
@@ -187,19 +189,19 @@ class json_formatter:
         }
         self.targets = {
             # Intro
-            "Serial Id": "Sid",
-            "League": "Snm",
-            "Country": "Cnm",
+            "serial_id": "Sid",
+            "league": "Snm",
+            "country": "Cnm",
             # Events
-            "Match Id": "Eid",
-            "H Scores": "Tr1",
-            "A Scores": "Tr2",
-            "Kickoff": "Esd",
-            "Status": "Eps",
-            "Home": "Nm",
-            "Away": "Nm",
-            "H id": "ID",
-            "A id": "ID",
+            "match_id": "Eid",
+            "home_scores": "Tr1",
+            "away_scores": "Tr2",
+            "kickoff": "Esd",
+            "status": "Eps",
+            "home": "Nm",
+            "away": "Nm",
+            "home_id": "ID",
+            "away_id": "ID",
         }
         if update:
             logging.info("Updating mappers from script official repo")
@@ -207,14 +209,14 @@ class json_formatter:
 
         if config_file:
             logging.info(f"Updating mappers in path '{config_file}'")
-            new_config = utils.read_json(config_file)
+            new_config = Utils.read_json(config_file)
             self.mappers.update(new_config.get("mappers", self.mappers))
             self.targets.update(new_config.get("targets", self.targets))
 
     def __call__(self, *args, **kwargs):
         return self.main(*args, **kwargs)
 
-    @utils.error_handler()
+    @Utils.error_handler()
     def update_keys(self) -> None:
         link = f"{__repo__}/raw/main/assets/config.json"
         resp = requests.get(link, timeout=30)
@@ -247,15 +249,15 @@ class json_formatter:
         for x in range(2):
             if x == 0:
                 T1 = data.get(self.mappers["T1"])[0]
-                resp["Home"] = T1.get(self.targets["Home"])
-                resp["H id"] = T1.get(self.targets["H id"])
+                resp["home"] = T1.get(self.targets["home"])
+                resp["home_id"] = T1.get(self.targets["home_id"])
             else:
                 T2 = data.get(self.mappers["T2"])[0]
-                resp["Away"] = T2.get(self.targets["Away"])
-                resp["A id"] = T2.get(self.targets["A id"])
+                resp["away"] = T2.get(self.targets["away"])
+                resp["away_id"] = T2.get(self.targets["away_id"])
         return resp
 
-    @utils.error_handler({})
+    @Utils.error_handler({})
     def main(
         self,
         max: int = 1000,
@@ -287,13 +289,13 @@ class json_formatter:
                 break
         if filters or not format == "json":
             logging.info(f"Using filters - {filters}")
-            utils.chosen_output = output or utils.chosen_output
-            utils.chosen_format = format
-            return utils.filter(response, **filters)
+            Utils.chosen_output = output or Utils.chosen_output
+            Utils.chosen_format = format
+            return Utils.filter(response, **filters)
         return response
 
 
-class livescore:
+class Livescore:
     def __init__(
         self,
         date=now.day,
@@ -302,7 +304,7 @@ class livescore:
         country_code="KE",
         timeout=20,
     ):
-        r"""Livescore instantiator
+        r"""Livescore constructor
         :param date: Date of the matches
         :param month: Month of the matches
         :param year: Year of the matches
@@ -323,7 +325,7 @@ class livescore:
     def __call__(self, *args, **kwargs):
         return self.matches(*args, **kwargs)
 
-    @utils.error_handler({})
+    @Utils.error_handler({})
     def matches(
         self,
         max: int = 1000,
@@ -354,7 +356,7 @@ class livescore:
             raw_content = reqs.json()
             if raw:
                 return raw_content
-            return json_formatter(data=raw_content).main(max, filters, output, format)
+            return JsonFormatter(data=raw_content).main(max, filters, output, format)
         else:
             logging.debug(
                 f"Content-Type : {reqs.headers.get('content-type')} Content : {reqs.text}"
@@ -368,7 +370,7 @@ if __name__ == "__main__":
     fnm = "livescore_matches_june_10_KE.json"
     with open(fnm) as fh:
         data = json.load(fh)
-    run = json_formatter(data)
+    run = JsonFormatter(data)
     resp = run.main(filters={"status": "FT", "country": "australia"}, format="json")
     index = 0
     # print(resp)
