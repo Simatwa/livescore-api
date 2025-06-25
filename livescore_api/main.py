@@ -27,7 +27,7 @@ class Utils:
     import sqlite3
 
     conn = sqlite3.connect(":memory:")
-    formats = ["html", "csv", "xlsx", "markdown", "xml", "json"]
+    formats = ("html", "csv", "xlsx", "markdown", "xml", "json")
     chosen_format = "json"
     chosen_output = "livescore"
 
